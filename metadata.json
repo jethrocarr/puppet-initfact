@@ -1,0 +1,14 @@
+{
+  "name": "jethrocarr-initfact",
+  "version": "0.0.1",
+  "author": "jethrocarr",
+  "summary": "Small Puppet fact to return the initsystem on this OS version",
+  "license": "Apache 2.0",
+  "source": "https://github.com/jethrocarr/puppet-initfact",
+  "project_page": "https://github.com/jethrocarr/puppet-initfact",
+  "issues_url": "https://github.com/jethrocarr/puppet-initfact/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

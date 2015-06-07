@@ -24,6 +24,11 @@ modules with something like:
       notify { "You are running the ${::initsystem} init system": }
     }
 
+You can also check the output of the command on the CLI with:
+
+    $ facter -p initsystem
+    upstart
+
 
 # License
 

@@ -9,10 +9,10 @@ Note that this isn't always as simple as it seems, for example some
 distributions support multiple init systems but one is treated better than
 others.
 
-The fact uses the osfamily values to select a curated result that is known to
-be the best option for that OS version. In future it will be expanded to support
-smarter autodetection.
-
+This fact uses the osfamily values to select a curated result that is known to
+be the best option for that OS version. If it doesn't have an curated entry for
+the specific OS/distro, it falls back to autodetection of the initsystem that
+is being used.
 
 # Usage
 
@@ -28,6 +28,12 @@ You can also check the output of the command on the CLI with:
 
     $ facter -p initsystem
     upstart
+
+
+# Development
+
+Contributions via the form of Pull Requests to add specific curated matches
+or smarter auto-detection is always welcome.
 
 
 # License

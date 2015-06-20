@@ -1,22 +1,43 @@
-# Fact that looks at the OS family fact and based on the rules created, returns
-# the primary init system for that platform.
-#
-# Important notes:
-# 1. Yes it would be ideal to automatically resolve the init system rather than
-#    using a hard list like below.
-#
-# 2. However some OSes might have multiples, eg Upstart + Init and it's not
-#    always a case of the newer tech being the right one to use.
-#
-# 3. So here's a TODO: Change the following to still use specific OS matching
-#    like configured, but replace the default with best-efforts auto detection.
-#
-# 4. I'll merge any decent PRs :-)
-#
+# Fact that returns the primary init system for a particular system using
+# either a curated list of known answers, or falling back to automatic
+# detection.
 
 
 def initsystem_lookup
 
+  # Whilst we include logic for automatically selecting the initsystem based
+  # on what is present on the system, it doesn't always work 100% since there
+  # are some distributions with multiple init systems present, and it's not
+  # always the case of the most modern init system being the right one to use.
+  #
+  # Hence, here we do a lookup against our curated list for a specific
+  # configured match:
+  initsystem = initsystem_curated
+
+  if initsystem.empty?
+    # We don't have a specific match for this system, so let's check for
+    # various known platforms.
+
+    # TODO: this could be a lot more sophisticated, patches welcome.
+
+    if File.exists?('/bin/systemctl')
+      return 'systemd'
+    elsif File.exists?('/sbin/upstart-local-bridge')
+      return 'upstart'
+    else
+      # sysvinit is the safest default to fall back to, even many distributions
+      # with other init systems maintain some compatibility.
+      return 'sysvinit'
+    end
+    
+  else
+    return initsystem
+  end
+
+end
+
+
+def initsystem_curated
   case Facter.value(:osfamily)
 
   when 'RedHat'
@@ -31,7 +52,7 @@ def initsystem_lookup
       when '2015'
         'sysvinit'
       else
-        'sysvinit' # default
+        '' # No match, fall back to auto-resolving
       end
 
     else
@@ -45,7 +66,7 @@ def initsystem_lookup
       when '7'
         'systemd'
       else
-        'systemd' # future versions should all be systemd
+        '' # No match, fall back to auto-resolving
       end
     end
 
@@ -62,7 +83,7 @@ def initsystem_lookup
       when '15.04'
         'systemd'
       else
-        'systemd' # All future Ubuntu versions should be systemd
+        '' # No match, fall back to auto-resolving
       end
 
     when 'Debian'
@@ -72,12 +93,11 @@ def initsystem_lookup
       when '8'
         'sysvinit'
       else
-        'systemd' # All future Debian versions will be systemd
+        '' # No match, fall back to auto-resolving
       end
 
     else
-      # See comments below re defaults.
-      'sysvinit'
+      '' # No match, fall back to auto-resolving
     end
 
   when 'FreeBSD'
@@ -94,14 +114,7 @@ def initsystem_lookup
     'launchd'
 
   else
-    # Default for any unknown system is sysvinit since most distros inc systemd
-    # using still support sysvinit scripts. In future, this default will change
-    # to systemd, so if you're using sysvinit and you're not listed in the above
-    # logic, please send in a pull request to avoid it suddenly changing.
-
-    # TODO: Here is where we should write the automatic init system lookup
-    # logic as mentioned in the header.
-    'sysvinit'
+    '' # No match, fall back to auto-resolving
   end
 end
 

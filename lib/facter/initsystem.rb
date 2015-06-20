@@ -41,7 +41,7 @@ def initsystem_lookup
       when '5'
         'sysvinit'
       when '6'
-        'sysvinit' # RHEL 6 also has init, but the service tools don't handle it right. Stick to sysvinit here.
+        'sysvinit' # RHEL 6 also has upstart, but the service tools don't handle it right. Stick to sysvinit here.
       when '7'
         'systemd'
       else

@@ -1,6 +1,6 @@
 {
   "name": "jethrocarr-initfact",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "author": "jethrocarr",
   "summary": "Small Puppet fact to return the initsystem on this OS version",
   "license": "Apache 2.0",

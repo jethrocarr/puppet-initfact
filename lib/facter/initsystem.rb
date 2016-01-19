@@ -88,10 +88,12 @@ def initsystem_curated
 
     when 'Debian'
       case Facter.value(:operatingsystemmajrelease)
+      when '6'
+        'sysvinit'
       when '7'
         'sysvinit'
       when '8'
-        'sysvinit'
+        'systemd'
       else
         '' # No match, fall back to auto-resolving
       end

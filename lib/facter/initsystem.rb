@@ -1,7 +1,6 @@
 # Fact that returns the primary init system for a particular system using
 # either a curated list of known answers, or falling back to automatic
 # detection.
-# From https://github.com/jethrocarr/puppet-initfact/blob/master/lib/facter/initsystem.rb
 
 
 def initsystem_lookup

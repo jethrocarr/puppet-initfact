@@ -2,9 +2,7 @@
 # either a curated list of known answers, or falling back to automatic
 # detection.
 
-
 def initsystem_lookup
-
   # Whilst we include logic for automatically selecting the initsystem based
   # on what is present on the system, it doesn't always work 100% since there
   # are some distributions with multiple init systems present, and it's not
@@ -20,22 +18,20 @@ def initsystem_lookup
 
     # TODO: this could be a lot more sophisticated, patches welcome.
 
-    if File.exists?('/bin/systemctl')
+    if File.exist?('/bin/systemctl')
       return 'systemd'
-    elsif File.exists?('/sbin/upstart-local-bridge')
+    elsif File.exist?('/sbin/upstart-local-bridge')
       return 'upstart'
     else
       # sysvinit is the safest default to fall back to, even many distributions
       # with other init systems maintain some compatibility.
       return 'sysvinit'
     end
-    
+
   else
     return initsystem
   end
-
 end
-
 
 def initsystem_curated
   case Facter.value(:osfamily)
@@ -82,6 +78,8 @@ def initsystem_curated
         'upstart'
       when '15.04'
         'systemd'
+      when '16.04'
+        'systemd'
       else
         '' # No match, fall back to auto-resolving
       end
@@ -120,11 +118,10 @@ def initsystem_curated
   end
 end
 
-
 begin
   Facter.add('initsystem') { setcode { initsystem_lookup } }
 rescue => e
-  puts "An unexpected issue occured when trying to resolve the init system fact."
+  puts 'An unexpected issue occured when trying to resolve the init system fact.'
   raise e
 end
 
